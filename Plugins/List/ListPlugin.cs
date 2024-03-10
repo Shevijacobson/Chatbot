@@ -44,11 +44,15 @@ namespace ListPlugin
                 return new PluginOutput($"New task: {str}", JsonSerializer.Serialize(data));
             }
             else if (input.Message.ToLower().StartsWith("delete"))
-            {   
-                list.RemoveAt(list.Count - 1);
-                var data = new PersistentDataStructure(list);
+            {
+                var str = input.Message.Substring("delete".Length).Trim();
+                bool isFind = list.Remove(str);
 
-                return new PluginOutput($"Delete last task");
+                var data = new PersistentDataStructure(list);
+                if (isFind)
+                    return new PluginOutput($"Delete task: {str}", JsonSerializer.Serialize(data));
+                else
+                    return new PluginOutput($"Not found such a value in the list", JsonSerializer.Serialize(data));
             }
             else if (input.Message.ToLower() == "list")
             {
